@@ -1,0 +1,26 @@
+h1{
+  color: white;
+  text-align: center;
+  font-size: 3.5em;
+  font-family: "Courier New", Courier, monospace;
+  text-decoration: underline;
+
+}
+
+h2{
+  color: white;
+  text-align: center;
+  font-size: 2em;
+  font-family: "Courier New", Courier, monospace;
+}
+
+p{
+  color: white;
+  text-align: left;
+  font-size: 1.25em;
+  font-family: "Courier New", Courier, monospace;
+}
+
+body{
+  background-color: #2623CB;
+}
