@@ -2,6 +2,7 @@ $(document).ready(function() {
   var pongTable = document.getElementById("pongTable");
   var pongTableContext = pongTable.getContext("2d");
 
+
   // Create Paddles
   var Paddle = function (x, y, width, height){
     this.x = x;
