@@ -41,6 +41,19 @@ $(document).ready(function() {
         this.paddle.render()
     };
 
+    Computer.prototype.update = function() {
+        var distY = ball.y - this.paddle.y - this.paddle.height / 2;
+        var compLevel = 1;
+        this.speed = 0;
+        if (distY > 40) {
+            this.speed = compLevel;
+        } else if (distY < -40) {
+            this.speed = -compLevel;
+        }
+
+        this.paddle.move(this.speed);
+    };
+
 
     // continuously render gameplay
     var animate = window.requestAnimationFrame ||
@@ -68,6 +81,46 @@ $(document).ready(function() {
         pongTableContext.closePath();
     };
 
+    Ball.prototype.move = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+
+        // collisions against the walls (Bounce Off)
+        if (this.y < 10) {
+            this.y = 10;
+            this.speedY *= -1;
+        } else if (this.y > 465) {
+            this.y = 465;
+            this.speedY *= -1;
+        }
+
+        // player paddle back and forth
+        function ballPaddleCollision(ball, paddle){
+            var distX = Math.abs(ball.x - paddle.x - paddle.width / 2);
+            var distY = Math.abs(ball.y - paddle.y - paddle.height / 2);
+
+            if (distX > (paddle.width / 2 + this.radius)) { return false; }
+            if (distY > (paddle.height / 2 + this.radius)) { return false; }
+
+            if ((distX <= (paddle.width / 2)) && (distY <= (paddle.height / 2))) { return true; }
+
+            var dx = distX - paddle.width / 2;
+            var dy = distY - paddle.height / 2;
+            return (dx * dx + dy * dy <= (Math.pow(ball.radius, 2)));
+        }
+
+        if (ballPaddleCollision(this, player.paddle)) {
+            this.x = 830;
+            this.speedY *= Math.abs(this.y - player.paddle.y - player.paddle.height / 2) / 20;
+            this.speedX *= -1;
+        } else if (ballPaddleCollision(this, computer.paddle)) {
+            this.x = 30;
+            this.speedY *= Math.abs(this.y - computer.paddle.y - computer.paddle.height / 2) / 20;
+            this.speedX *= -1;
+        }
+    };
+
     // Construct the three elements by creating new objects from the constructors: player,  computer, and ball
 
     var player = new Player(
@@ -81,7 +134,8 @@ $(document).ready(function() {
     var ball = new Ball();
 
     function step() {
-        pongTableContext.clearRect(0, 0, 850, 475);
+        pongTableContext.clearRect(0, 0, 850, 550);
+        ball.move();
         player.render();
         computer.render();
         ball.render();
