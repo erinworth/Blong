@@ -44,7 +44,7 @@ $(document).ready(function() {
     Computer.prototype.update = function() {
         var distY = ball.y - this.paddle.y - this.paddle.height / 2;
         var compLevel = 1;
-        this.speed = 0;
+        this.speed = 1;
         if (distY > 40) {
             this.speed = compLevel;
         } else if (distY < -40) {
@@ -84,6 +84,22 @@ $(document).ready(function() {
     Ball.prototype.move = function() {
         this.x += this.speedX;
         this.y += this.speedY;
+
+        function resetBall(ball) {
+            ball.x = pongTable.width / 2;
+            ball.y = pongTable.height / 2;
+            ball.speedX = (Math.round(Math.random()) * 2 - 1) * (Math.random() * (ball.speed - 3) + 3);
+            ball.speedY = (Math.round(Math.random()) * 2 - 1) * Math.sqrt(Math.pow(ball.speed, 2) - Math.pow(ball.speedX, 2));
+        }
+
+        // Points scored for collisions against the wall
+        if (this.x < 10) {
+            // points for player on the right side
+            resetBall(this)
+        } else if (this.x > 850) {
+            // points for computer on the left side
+            resetBall(this)
+        }
 
 
         // collisions against the walls (Bounce Off)
@@ -134,8 +150,9 @@ $(document).ready(function() {
     var ball = new Ball();
 
     function step() {
-        pongTableContext.clearRect(0, 0, 850, 550);
+        pongTableContext.clearRect(0, 0, 850, 475);
         ball.move();
+        computer.update();
         player.render();
         computer.render();
         ball.render();
