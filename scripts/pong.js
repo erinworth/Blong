@@ -1,6 +1,11 @@
 $(document).ready(function() {
     var pongTable = document.getElementById("pongTable");
     var pongTableContext = pongTable.getContext("2d");
+    //scoreboard variables to track score changes
+    var playerScore = 0;
+    var computerScore = 0;
+    var playerScoreDisplay = document.getElementById("playerScoreDisplay");
+    var computerScoreDisplay = document.getElementById("computerScoreDisplay");
 
     // create paddles
     var Paddle = function(x, y, width, height) {
@@ -44,7 +49,7 @@ $(document).ready(function() {
     Computer.prototype.update = function() {
         var distY = ball.y - this.paddle.y - this.paddle.height / 2;
         var compLevel = 1;
-        this.speed = 1;
+        this.speed = 0;
         if (distY > 40) {
             this.speed = compLevel;
         } else if (distY < -40) {
@@ -95,9 +100,13 @@ $(document).ready(function() {
         // Points scored for collisions against the wall
         if (this.x < 10) {
             // points for player on the right side
+            playerScore++;
+            playerScoreDisplay.innerHTML = "Player score: " + playerScore;
             resetBall(this)
         } else if (this.x > 850) {
             // points for computer on the left side
+            computerScore++;
+            computerScoreDisplay.innerHTML = "Computer score: " + computerScore;
             resetBall(this)
         }
 
@@ -160,6 +169,8 @@ $(document).ready(function() {
     }
 
     step();
+    playerScoreDisplay.innerHTML = "Player score: " + playerScore;
+    computerScoreDisplay.innerHTML = "Computer score: " + computerScore;
 
     window.addEventListener('keydown', function(event) {
         if (event.keyCode === 38) {
